@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.method.SingleLineTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,27 +27,41 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
 public class SignupActivity extends AppCompatActivity {
+    // Constants for Firebase database
+    public static final String USERNAME = "username";
+    public static final String BIO = "bio";
+    public static final String USER_INFO = "userInfo";
+
+    public static DocumentReference mDocRef = FirebaseFirestore.getInstance().document("sampleData/UserInfo");
+    // naming for items in signup page
     EditText emailID, password, passwordConfirm, username, bio;
     Button btnSignUp, btntakeImage;
     ImageView profileCaptured;
 
     TextView tvSignIn;
-    String sendUsername;
-    String sendBio;
+    String UserInfoConca;
     private FirebaseAuth mFirebaseAuth;
     String pathToFile;
     private static final int CAMERA_REQUEST = 1888;
@@ -76,8 +91,29 @@ public class SignupActivity extends AppCompatActivity {
                 String email = emailID.getText().toString();
                 String pwd = password.getText().toString();
                 String pwdc = passwordConfirm.getText().toString();
+
+                // save these two String to firebase
                 String user = username.getText().toString();
                 String bioInfo = bio.getText().toString();
+
+                final Map<String, Object> UserInfo = new HashMap<>();
+                UserInfo.put(USERNAME, user);
+                UserInfo.put(BIO, bioInfo);
+                mDocRef.set(UserInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(USER_INFO, "Document has been saved");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(USER_INFO, "Document was not saved!", e);
+                    }
+                });
+
+
+
+
 
                 if (email.isEmpty()) {
                     emailID.setError("Please enter email");
@@ -110,11 +146,9 @@ public class SignupActivity extends AppCompatActivity {
                 }
 
                 // passing taken profile image path to HomeActivity
-                Intent passImagePath = new Intent(SignupActivity.this, HomeActivity.class);
-                passImagePath.putExtra("imagepath", pathToFile);
-                startActivity(passImagePath);
-
-
+                fetchUserInfo();
+                // passImage();
+                passUserInfo();
 
                 // passing username and bio into home activity
 //                Intent i = new Intent(SignupActivity.this, HomeActivity.class);
@@ -182,6 +216,38 @@ public class SignupActivity extends AppCompatActivity {
             Log.d("mylog", "Excep : " + e.toString());
         }
         return image;
+    }
+
+    public void fetchUserInfo () {
+        mDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    String userName = documentSnapshot.getString(USERNAME);
+                    String shortBio = documentSnapshot.getString(BIO);
+
+                    if (!userName.isEmpty() && !shortBio.isEmpty()) {
+                        UserInfoConca = userName + "," + shortBio + "," + pathToFile;
+                    } else {
+                        UserInfoConca = "userName missing" + "," + "Bio missing" + "," + pathToFile;
+                    }
+                }
+            }
+        });
+    }
+
+    private void passImage () {
+        // passing taken profile image path to HomeActivity
+        Intent passImagePath = new Intent(SignupActivity.this, HomeActivity.class);
+        passImagePath.putExtra("imagepath", pathToFile);
+        startActivity(passImagePath);
+    }
+    private  void passUserInfo() {
+        if (UserInfoConca != null) {
+            Intent passUserInfo = new Intent(SignupActivity.this, HomeActivity.class);
+            passUserInfo.putExtra("passUserInfo", UserInfoConca);
+            startActivity(passUserInfo);
+        }
     }
 
 }

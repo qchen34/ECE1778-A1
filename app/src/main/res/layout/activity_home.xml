@@ -36,7 +36,7 @@
     <TextView
         android:id="@+id/usernameView"
         android:layout_width="182dp"
-        android:layout_height="23dp"
+        android:layout_height="30dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:maxLines="1"
@@ -51,11 +51,11 @@
 
     <TextView
         android:id="@+id/shortBio"
-        android:layout_width="182dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="174dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="24dp"
         android:gravity="center"
-        android:text="Bio will display here"
+        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/usernameView" />

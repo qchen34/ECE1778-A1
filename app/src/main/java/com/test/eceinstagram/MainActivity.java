@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,16 +13,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     EditText emailID, password;
     Button btnSignIn;
     TextView tvSignUp;
     FirebaseAuth mFirebaseAuth;
+
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Override
@@ -41,9 +50,6 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
                 if (mFirebaseUser != null) {
                     Toast.makeText(MainActivity.this, "Profile page", Toast.LENGTH_SHORT).show();
-//                    Intent i = new Intent(MainActivity.this, HomeActivity.class);
-//                    i.putExtra("Username", "Tim,I love the world");
-//                    startActivity(i);
                 } else {
                     Toast.makeText(MainActivity.this, "Please Login", Toast.LENGTH_SHORT).show();
                 }
@@ -93,6 +99,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    public void setup() {
+        // Initialize an instance of Cloud Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    }
+
+    public void addUserInformation() {
+        // Create a new user with a first and last name
+        Map<String, Object> user = new HashMap<>();
+        user.put("username", "Ada");
+        user.put("shortbio", "this is Ada lovelace");
+
+
     }
 
 }
