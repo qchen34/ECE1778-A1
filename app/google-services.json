@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1025582759602",
+    "firebase_url": "https://ece1778-85aac.firebaseio.com",
+    "project_id": "ece1778-85aac",
+    "storage_bucket": "ece1778-85aac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1025582759602:android:4311aaafe384da912653ab",
+        "android_client_info": {
+          "package_name": "com.test.eceinstagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1025582759602-5il8aol00hdn2r0dqojqo7i2sarlsjru.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-fLHZUPoeSrI1T4l2hMjMGAOYPftfvps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1025582759602-5il8aol00hdn2r0dqojqo7i2sarlsjru.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
